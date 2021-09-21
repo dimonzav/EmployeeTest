@@ -1,25 +1,20 @@
-﻿using AutoMapper;
-using DataAccess.UnitOfWork;
-using Domain.Entities;
+﻿using BusinessData.Interfaces;
+using BusinessData.Models;
 using MetinvestTest.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MetinvestTest.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly IEmployeeService _employeeService;
 
         public EmployeeController(
-            IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IEmployeeService employeeService)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _employeeService = employeeService;
         }
 
         // GET: Employee
@@ -32,13 +27,7 @@ namespace MetinvestTest.Controllers
         [Route("list")]
         public IActionResult List()
         {
-            ICollection<Employee> employees = _unitOfWork.GetRepository<Employee>().GetList();
-            List<EmployeeModel> models = new List<EmployeeModel>();
-            foreach (Employee employee in employees)
-            {
-                models.Add(_mapper.Map<EmployeeModel>(employee));
-            }
-            return Json(models);
+            return Json(_employeeService.GetEmployees());
         }
 
         // GET: Employee/Details/5
@@ -54,49 +43,19 @@ namespace MetinvestTest.Controllers
         {
             try
             {
-                var modell =_mapper.Map<Employee>(model);
-
-                _unitOfWork.GetRepository<Employee>()
-                    .Add(_mapper.Map<Employee>(model));
-                return new JsonResult("Added!");
+                _employeeService.AddEmployee(model);
+                return new JsonResult("Employee added!");
             }
-            catch (Exception ex)
+            catch
             {
-                return View();
+                return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             }
-        }
-
-        // GET: Employee/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
         }
 
         // POST: Employee/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Employee/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Employee/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {

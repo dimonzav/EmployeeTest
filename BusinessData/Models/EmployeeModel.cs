@@ -1,7 +1,7 @@
 ﻿using Domain.Enums;
 using System;
 
-namespace MetinvestTest.Models
+namespace BusinessData.Models
 {
     public class EmployeeModel
     {

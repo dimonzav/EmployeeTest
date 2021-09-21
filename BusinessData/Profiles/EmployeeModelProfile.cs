@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using BusinessData.Models;
 
-namespace MetinvestTest.Models
+namespace BusinessData.Profiles
 {
     public class EmployeeModelProfile : Profile
     {
