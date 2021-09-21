@@ -1,17 +1,14 @@
 ﻿using Domain.Enums;
 using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Entities
+namespace MetinvestTest.Models
 {
-    public class Employee
+    public class EmployeeModel
     {
-        [Key]
-        public int Id { get; set; }
         public int Number { get; set; }
         public string FullName { get; set; }
         public Sex Sex { get; set; }
         public DateTime Birth { get; set; }
-        public bool IsStaffMember { get; set; }
+        public string IsStaffMember { get; set; }
     }
 }

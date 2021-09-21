@@ -1,4 +1,7 @@
-﻿using Domain.Context;
+﻿using AutoMapper;
+using DataAccess.Repository;
+using DataAccess.UnitOfWork;
+using Domain.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -28,6 +31,14 @@ namespace MetinvestTest
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddScoped<ApplicationDbContext>();
+            services.AddScoped<IRepositoryFactory, UnitOfWork<ApplicationDbContext>>();
+            services.AddScoped<IUnitOfWork, UnitOfWork<ApplicationDbContext>>();
+            services.AddScoped<IUnitOfWork<ApplicationDbContext>, UnitOfWork<ApplicationDbContext>>();
+            var configuration = new MapperConfiguration(cfg => cfg.AddMaps(new[] { "MetinvestTest"}));
+            IMapper mapper = configuration.CreateMapper();
+            services.AddSingleton(mapper);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

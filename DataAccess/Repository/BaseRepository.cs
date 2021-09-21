@@ -17,6 +17,7 @@ namespace DataAccess.Repository
 
         public void Add(T entity) {
             _dbSet.Add(entity);
+            _dbContext.SaveChanges();
         }
 
         public void Add(params T[] entities) {

@@ -1,11 +1,27 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using DataAccess.UnitOfWork;
+using Domain.Entities;
+using MetinvestTest.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace MetinvestTest.Controllers
 {
     public class EmployeeController : Controller
     {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+
+        public EmployeeController(
+            IUnitOfWork unitOfWork,
+            IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
         // GET: Employee
         public ActionResult Index()
         {
@@ -16,11 +32,13 @@ namespace MetinvestTest.Controllers
         [Route("list")]
         public IActionResult List()
         {
-            List<object> employees = new List<object>
+            ICollection<Employee> employees = _unitOfWork.GetRepository<Employee>().GetList();
+            List<EmployeeModel> models = new List<EmployeeModel>();
+            foreach (Employee employee in employees)
             {
-                new { FullName = "sdad" }
-            };
-            return Json(employees);
+                models.Add(_mapper.Map<EmployeeModel>(employee));
+            }
+            return Json(models);
         }
 
         // GET: Employee/Details/5
@@ -29,22 +47,20 @@ namespace MetinvestTest.Controllers
             return View();
         }
 
-        // GET: Employee/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
         // POST: Employee/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [Route("create")]
+        public IActionResult Create([FromBody] EmployeeModel model)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var modell =_mapper.Map<Employee>(model);
+
+                _unitOfWork.GetRepository<Employee>()
+                    .Add(_mapper.Map<Employee>(model));
+                return new JsonResult("Added!");
             }
-            catch
+            catch (Exception ex)
             {
                 return View();
             }

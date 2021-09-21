@@ -14,22 +14,38 @@
             <tr>
                 <th field="fullName" width="50" editor="{type:'validatebox',options:{required:true}}">Full Name</th>
                 <th field="sex" width="50" editor="{type:'validatebox',options:{required:true}}">Sex</th>
-                <th field="birth" width="50" editor="text">Birthday</th>
-                <th field="IsStaffMember" width="50" editor="{type:'validatebox',options:{validType:'email'}}">Is Staff Member</th>
+                <th field="birth" width="50" editor="{type:'validatebox',options:{required:true}}">Birthday</th>
+                <th field="isStaffMember" width="50" editor="{type:'validatebox',options:{required:true}}">Is Staff Member?</th>
             </tr>
         </thead>
     </table>
     <div id="toolbar">
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="$('#add-dlg').dialog('open')">New</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Destroy</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true">Save</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true">Cancel</a>
     </div>
 </div>
 
-<div id="add-dlg" class="easyui-dialog" title="My Dialog" style="width:400px;height:200px;"
-     data-options="iconCls:'icon-save',resizable:true,modal:true,closed: true">
-    Dialog Content.
+<div id="add-dlg" class="easyui-dialog" title="My Dialog" style="width:800px;height:400px;"
+     data-options="iconCls:'icon-save',resizable:true,modal:true,closed:true">
+    <form id="add-employee-form" method="post">
+        <div>
+            <label for="name">Full Name:</label>
+            <input id="fullName" class="easyui-validatebox" type="text" name="fullName" data-options="required:true" />
+        </div>
+        <div>
+            <input class="easyui-radiobutton" name="sex" value="Famale" label="Famale:">
+            <input class="easyui-radiobutton" name="sex" value="Male" label="Male:">
+        </div>
+        <div>
+            <label for="email">Birthday:</label>
+            <input id="birthday" class="easyui-datebox" type="text" name="birthday" data-options="required:true" />
+        </div>
+        <div>
+            <label for="email">Is Staff Member:</label>
+            <input id="isStaffMember" class="easyui-checkbox" type="text" name="isStaffMember" />
+        </div>
+        <a id="add-employee" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true">Save</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="$('#add-dlg').dialog('close')">Cancel</a>
+    </form>
 </div>
 
 <script>
@@ -39,8 +55,25 @@
 
     $('#employee').datagrid({
         url: 'list',
-        saveUrl: 'save_user.php',
-        updateUrl: 'update_user.php',
-        destroyUrl: 'destroy_user.php'
+        //saveUrl: 'save_user.php',
+        //updateUrl: 'update_user.php',
+        //destroyUrl: 'destroy_user.php'
+    });
+
+    $('#add-employee').click(function () {
+        var model = {
+            FullName: $('#fullName').val()
+        }
+
+        console.log(model);
+        $.ajax({
+            url: "create",
+            method: "POST",
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(model)
+        }).done(data => {
+            $('#add-dlg').dialog('close');
+        });
     });
 </script>
