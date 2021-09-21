@@ -12,10 +12,10 @@
            rownumbers="true" fitColumns="true" singleSelect="true">
         <thead>
             <tr>
-                <th field="number" width="50" editor="{type:'validatebox',options:{required:true}}">Number</th>
+                <th field="number" width="50" editor="{type:'validatebox',options:{required:true}}" formatter="formatNumber">Number</th>
                 <th field="fullName" width="50" editor="{type:'validatebox',options:{required:true}}">Full Name</th>
-                <th field="sex" width="50" editor="{type:'validatebox',options:{required:true}}">Sex</th>
-                <th field="birth" width="50" editor="{type:'datebox',options:{required:true}}">Birthday</th>
+                <th field="sex" width="50" editor="{type:'validatebox',options:{required:true}}" formatter="formatSex">Sex</th>
+                <th field="birth" width="50" editor="{type:'datebox',options:{required:true}}" formatter="formatBirth">Birthday</th>
                 <th field="staffMember" width="50" editor="{type:'validatebox',options:{required:true}}">Is Staff Member?</th>
             </tr>
         </thead>
@@ -38,7 +38,7 @@
         </div>
         <div>
             <label for="email">Birthday:</label>
-            <input id="birthday" class="easyui-datebox" type="text" name="Birth2" data-options="required:true" />
+            <input id="birthday" class="easyui-datebox" type="text" name="Birth" data-options="required:true" />
         </div>
         <div>
             <label for="email">Is Staff Member:</label>
@@ -85,4 +85,16 @@
             $('#employee').datagrid('reload');
         });
     });
+
+    function formatSex(val, row) {
+        return val == 1 ? 'Male' : 'Famale';
+    }
+
+    function formatBirth(val, row) {
+        return new Date(val).toLocaleDateString("uk-UA");
+    }
+
+    function formatNumber(val, row) {
+        return val == 0 ? '<span style="color:red;">' + val + '</span>' : '<span style="color:green;">' + val + '</span>';
+    }
 </script>
