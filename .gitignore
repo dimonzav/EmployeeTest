@@ -6,3 +6,7 @@
 /.vs/MetinvestTest/v16/TestStore/0
 /Domain/obj
 /MetinvestTest/obj
+/.vs/MetinvestTest
+/DataAccess/bin/Debug/net472
+/Domain/bin/Debug/net472
+/MetinvestTest/bin/Debug/net472

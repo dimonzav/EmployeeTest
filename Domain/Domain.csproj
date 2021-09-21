@@ -2,10 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
+
+    <EmbeddedResourceUseDependentUponConvention>true</EmbeddedResourceUseDependentUponConvention>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
   </ItemGroup>
-
+  
 </Project>
