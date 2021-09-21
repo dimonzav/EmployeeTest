@@ -9,6 +9,7 @@ namespace BusinessData.Models
         public string FullName { get; set; }
         public Sex Sex { get; set; }
         public DateTime Birth { get; set; }
-        public string IsStaffMember { get; set; }
+        public string StaffMember { get; set; }
+        public bool IsStaffMember { get; set; }
     }
 }

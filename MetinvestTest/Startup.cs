@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using BusinessData.Interfaces;
+using BusinessData.Services;
 using DataAccess.Repository;
 using DataAccess.UnitOfWork;
 using Domain.Context;
@@ -36,9 +38,10 @@ namespace MetinvestTest
             services.AddScoped<IRepositoryFactory, UnitOfWork<ApplicationDbContext>>();
             services.AddScoped<IUnitOfWork, UnitOfWork<ApplicationDbContext>>();
             services.AddScoped<IUnitOfWork<ApplicationDbContext>, UnitOfWork<ApplicationDbContext>>();
-            var configuration = new MapperConfiguration(cfg => cfg.AddMaps(new[] { "MetinvestTest"}));
+            var configuration = new MapperConfiguration(cfg => cfg.AddMaps(new[] { "MetinvestTest", "BusinessData" }));
             IMapper mapper = configuration.CreateMapper();
             services.AddSingleton(mapper);
+            services.AddScoped<IEmployeeService, EmployeeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

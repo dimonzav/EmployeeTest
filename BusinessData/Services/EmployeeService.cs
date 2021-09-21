@@ -1,28 +1,33 @@
 ﻿using AutoMapper;
 using BusinessData.Interfaces;
 using BusinessData.Models;
+using DataAccess.Repository;
 using DataAccess.UnitOfWork;
+using Domain.Context;
 using Domain.Entities;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BusinessData.Services
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
+        private readonly IRepository<Employee> _employeeRepository;
         private readonly IMapper _mapper;
 
         public EmployeeService(
-            IUnitOfWork unitOfWork,
+            IUnitOfWork<ApplicationDbContext> unitOfWork,
             IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _employeeRepository = _unitOfWork.GetRepository<Employee>();
             _mapper = mapper;
         }
 
         public List<EmployeeModel> GetEmployees()
         {
-            ICollection<Employee> employees = _unitOfWork.GetRepository<Employee>().GetList();
+            ICollection<Employee> employees = _employeeRepository.GetList();
             List<EmployeeModel> models = new List<EmployeeModel>();
             foreach (Employee employee in employees)
             {
@@ -35,10 +40,14 @@ namespace BusinessData.Services
         {
             try
             {
-                var modell = _mapper.Map<Employee>(model);
+                // business logic
+                if (model.IsStaffMember)
+                {
+                    int lastEmployeeNumber = _unitOfWork.Context.Employees.Max(i => i.Number);
+                    model.Number = ++lastEmployeeNumber;
+                }
 
-                _unitOfWork.GetRepository<Employee>()
-                    .Add(_mapper.Map<Employee>(model));
+                _employeeRepository.Add(_mapper.Map<Employee>(model));
             }
             catch
             {

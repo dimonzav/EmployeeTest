@@ -12,10 +12,11 @@
            rownumbers="true" fitColumns="true" singleSelect="true">
         <thead>
             <tr>
+                <th field="number" width="50" editor="{type:'validatebox',options:{required:true}}">Number</th>
                 <th field="fullName" width="50" editor="{type:'validatebox',options:{required:true}}">Full Name</th>
                 <th field="sex" width="50" editor="{type:'validatebox',options:{required:true}}">Sex</th>
                 <th field="birth" width="50" editor="{type:'validatebox',options:{required:true}}">Birthday</th>
-                <th field="isStaffMember" width="50" editor="{type:'validatebox',options:{required:true}}">Is Staff Member?</th>
+                <th field="staffMember" width="50" editor="{type:'validatebox',options:{required:true}}">Is Staff Member?</th>
             </tr>
         </thead>
     </table>
@@ -54,18 +55,19 @@
     });
 
     $('#employee').datagrid({
-        url: 'list',
-        //saveUrl: 'save_user.php',
-        //updateUrl: 'update_user.php',
-        //destroyUrl: 'destroy_user.php'
+        url: 'list'
     });
 
     $('#add-employee').click(function () {
         var model = {
-            FullName: $('#fullName').val()
+            FullName: $('#fullName').val(),
+            Sex: $('input[name="sex"]:checked').val(),
+            Birth: '2021-08-31',
+            IsStaffMember: true
         }
 
         console.log(model);
+
         $.ajax({
             url: "create",
             method: "POST",
