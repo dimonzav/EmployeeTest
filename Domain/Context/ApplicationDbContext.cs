@@ -15,7 +15,7 @@ namespace Domain.Context
         {
             modelBuilder.Entity<Employee>().Property(x => x.Birth).HasColumnType("datetime2");
 
-            modelBuilder.Entity<Employee>().HasIndex(x => new { x.Number, x.IsStaffMember }).IsUnique();
+            modelBuilder.Entity<Employee>().HasIndex(x => new { x.Number, x.IsStaffMember });
         }
     }
 }

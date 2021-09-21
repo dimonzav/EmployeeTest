@@ -15,7 +15,7 @@
                 <th field="number" width="50" editor="{type:'validatebox',options:{required:true}}">Number</th>
                 <th field="fullName" width="50" editor="{type:'validatebox',options:{required:true}}">Full Name</th>
                 <th field="sex" width="50" editor="{type:'validatebox',options:{required:true}}">Sex</th>
-                <th field="birth" width="50" editor="{type:'validatebox',options:{required:true}}">Birthday</th>
+                <th field="birth" width="50" editor="{type:'datebox',options:{required:true}}">Birthday</th>
                 <th field="staffMember" width="50" editor="{type:'validatebox',options:{required:true}}">Is Staff Member?</th>
             </tr>
         </thead>
@@ -25,48 +25,54 @@
     </div>
 </div>
 
-<div id="add-dlg" class="easyui-dialog" title="My Dialog" style="width:800px;height:400px;"
+<div id="add-dlg" class="easyui-dialog" title="My Dialog" style="width:600px;height:400px;"
      data-options="iconCls:'icon-save',resizable:true,modal:true,closed:true">
     <form id="add-employee-form" method="post">
         <div>
             <label for="name">Full Name:</label>
-            <input id="fullName" class="easyui-validatebox" type="text" name="fullName" data-options="required:true" />
+            <input id="fullName" class="easyui-validatebox" type="text" name="FullName" data-options="required:true" />
         </div>
         <div>
-            <input class="easyui-radiobutton" name="sex" value="Famale" label="Famale:">
-            <input class="easyui-radiobutton" name="sex" value="Male" label="Male:">
+            <input class="easyui-radiobutton" name="sex" value="Famale" label="Famale:" data-options="required:true">
+            <input class="easyui-radiobutton" name="sex" value="Male" label="Male:" data-options="required:true">
         </div>
         <div>
             <label for="email">Birthday:</label>
-            <input id="birthday" class="easyui-datebox" type="text" name="birthday" data-options="required:true" />
+            <input id="birthday" class="easyui-datebox" type="text" name="Birth2" data-options="required:true" />
         </div>
         <div>
             <label for="email">Is Staff Member:</label>
-            <input id="isStaffMember" class="easyui-checkbox" type="text" name="isStaffMember" />
+            <input id="isStaffMember" class="easyui-checkbox" name="IsStaffMember" value="true" />
         </div>
-        <a id="add-employee" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true">Save</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="$('#add-dlg').dialog('close')">Cancel</a>
+        <input class="easyui-linkbutton" type="submit" value="Submit" style="width:80px;height:30px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#add-dlg').dialog('close')">Cancel</a>
     </form>
 </div>
 
 <script>
-    $(document).ready(function () {
-        
-    });
-
     $('#employee').datagrid({
         url: 'list'
+    });
+
+    $('#add-employee-form').form({
+        url: 'create',
+        onSubmit: function () {
+            return $(this).form('validate');
+        },
+        success: function (data) {
+            $.messager.alert('Info', data, 'info');
+            $('#add-dlg').dialog('close');
+            $('#employee').datagrid('reload');
+        }
     });
 
     $('#add-employee').click(function () {
         var model = {
             FullName: $('#fullName').val(),
             Sex: $('input[name="sex"]:checked').val(),
-            Birth: '2021-08-31',
-            IsStaffMember: true
+            Birth: $('#birthday').val(),
+            IsStaffMember: $('#isStaffMember').is(':checked')
         }
-
-        console.log(model);
 
         $.ajax({
             url: "create",
@@ -76,6 +82,7 @@
             data: JSON.stringify(model)
         }).done(data => {
             $('#add-dlg').dialog('close');
+            $('#employee').datagrid('reload');
         });
     });
 </script>

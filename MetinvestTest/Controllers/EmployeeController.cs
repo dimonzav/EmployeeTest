@@ -30,16 +30,10 @@ namespace MetinvestTest.Controllers
             return Json(_employeeService.GetEmployees());
         }
 
-        // GET: Employee/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // POST: Employee/Create
         [HttpPost]
         [Route("create")]
-        public IActionResult Create([FromBody] EmployeeModel model)
+        public IActionResult Create(EmployeeModel model)
         {
             try
             {

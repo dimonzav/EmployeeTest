@@ -5,6 +5,7 @@ using DataAccess.Repository;
 using DataAccess.UnitOfWork;
 using Domain.Context;
 using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,7 +50,7 @@ namespace BusinessData.Services
 
                 _employeeRepository.Add(_mapper.Map<Employee>(model));
             }
-            catch
+            catch (Exception ex)
             {
                 throw;
             }
